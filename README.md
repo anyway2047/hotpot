@@ -9,6 +9,6 @@
 ## deploy
   ### Ethereum
   You can use remix or ethersjs to deploy the contract. The testnet example is deployed on the goerli testnet of Ethereum. The contract address is [0x9e81E4eE6440ce2470d8EcD66C6386eC362472EB](https://goerli.etherscan.io/token/0x9e81E4eE6440ce2470d8EcD66C6386eC362472EB)
-  ### Plokadot
+  ### Polkadot
   You can deploy contract at Moonbeam, an Ethereum-compatible smart contract parachain on Polkadot. Moonbeam is much more than just an EVM implementation: it’s a highly specialized Layer 1 chain that mirrors Web3 RPC, accounts, keys, subscriptions, logs, and more. The Moonbeam platform extends the base Ethereum feature set with additional features such as on-chain governance, staking, and cross-chain integrations. Deployment steps like Ethereum. The testnet example is deployed on the alpha testnet of Moonbase. The contract address is [0xDb443Ec688179E72c7912FB2B6718c078cE3A89F](https://moonbase.moonscan.io/token/0xDb443Ec688179E72c7912FB2B6718c078cE3A89F)
   ***
