@@ -1,7 +1,7 @@
 # hotpot
 ## description
   hotpot is a tool for automatic distribution and deployment, integrating DAO contracts and plugins, that realizes the rapid process of issuing a dao.
-  This repository stores all hotpot solidity contracts used by hotpot.
+  This repository stores all hotpot evm compatible contracts used by hotpot.
   ***
 ## compile
   You can use contract compilation tools such as remix and solc to compile, The two main functions are in ```BondingSwap.sol``` and ```Hotpot.sol``` file, The constructor of BondingSwap does not need to pass in parameters, but the latter one needs to pass in 3 parameters, namely ```NAME, SYMBOL, CURVE (the address of the first contract)```
