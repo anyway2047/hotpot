@@ -7,25 +7,13 @@ pragma solidity ^0.8.0;
  */
 interface IHotpotMetadata {
     /**
-     * @dev Sets the values for {daoName} and {daoUrl} and {introduction}.
+     * @dev Sets the values for {daoUrl}.
      */
-    function setMetadata(string memory daoName,
-                            string memory daoUrl,
-                            string memory introduction) external returns (bool);
-
-    /**
-     * @dev Returns the dao name of the dao project.
-     */
-    function daoName() external view returns (string memory);
+    function setMetadata(string memory daoUrl) external returns (bool);
 
     /**
      * @dev Returns the logo of the dao project.
      */
     function daoUrl() external view returns (string memory);
-
-    /**
-     * @dev Returns the introduction of the  dao project.
-     */
-    function introduction() external view returns (string memory);
 
 }

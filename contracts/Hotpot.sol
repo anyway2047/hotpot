@@ -104,7 +104,7 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
      * @dev See {IHotpotERC20-totalSupply}.
      */
     function totalSupply() public view virtual override returns (uint256) {
-        return _totalSupply * 10 ** 18;
+        return _totalSupply;
     }
 
     /**
@@ -347,23 +347,12 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
     /// ---- Implementation of the IHotpotMetadata interface.  ---- ///
 
     /**
-     * @dev Sets the values for {daoName} and {daoUrl} and {introduction}.
+     * @dev Sets the values for {daoUrl}.
      */
 
-    function setMetadata(string memory daoName,
-        string memory daoUrl,
-        string memory introduction) external virtual override onlyOwner returns (bool) {
-        _metadata._daoName = daoName;
+    function setMetadata(string memory daoUrl) external virtual override onlyOwner returns (bool) {
         _metadata._daoUrl = daoUrl;
-        _metadata._introduction = introduction;
         return true;
-    }
-
-    /**
-     * @dev Returns the dao name of the dao project.
-     */
-    function daoName() public view virtual override returns (string memory){
-        return _metadata._daoName;
     }
 
     /**
@@ -371,13 +360,6 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
      */
     function daoUrl() public view virtual override returns (string memory){
         return _metadata._daoUrl;
-    }
-
-    /**
-     * @dev Returns the introduction of the  dao project.
-     */
-    function introduction() public view virtual override returns (string memory){
-        return _metadata._introduction;
     }
 
     /// ---- Implementation of the IHotpot interface.  ---- ///
