@@ -52,12 +52,13 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
      * All three of these values are immutable: they can only be set once during
      * construction.
      */
-    constructor(string memory name_, string memory symbol_, uint256 initialSupply_) {
+    constructor(string memory name_, string memory symbol_, address curve_, uint256 initialSupply_) {
         _name = name_;
         _symbol = symbol_;
         _initialSupply = initialSupply_;
         _releasedPresale[msg.sender] = initialSupply_;
         _treasury = msg.sender;
+        setBondingCurve(curve_);
     }
 
     /// ---- Implementation of the IHotpotERC20 interface.  ---- ///
@@ -76,7 +77,12 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
     function symbol() public view returns (string memory) {
         return _symbol;
     }
-
+    /**
+     * @dev Returns the gasfee of the token. rate = fee * 1/10000
+     */
+    function fee() public view returns (uint256) {
+        return _treasuryFee;
+    }
     /**
      * @dev Returns the number of decimals used to get its user representation.
      * For example, if `decimals` equals `2`, a balance of `505` tokens should
@@ -508,12 +514,12 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
         uint256 x;
         uint256 y;
         (x, y)= _mining(tokens, _totalSupply);
+        require(x > 0);
+        require(y > 0);
         uint256 fee = _gasFeeMint(x, y, _treasuryFee);
         uint256 _projectFee = y.safeMul(_projectFee).safeDiv(10000);
 
         y = y.safeAdd(fee).safeAdd(_projectFee);
-        require(x > 0);
-        require(y >= 0);
         uint256 need = y.safeAdd(fee).safeAdd(_projectFee);
         require(need <= msg.value);
 
@@ -524,9 +530,9 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
             payable(msg.sender).transfer((msg.value).safeSub(need));
         }
 
-        _balances[to] = (_balances[to]).safeAdd(x * (10 ** 18));
+        _balances[to] = (_balances[to]).safeAdd(x);
         _totalSupply = _totalSupply.safeAdd(x);
-        emit Mined(to, x);
+        emit Mined(to, x, y);
     }
 
     /**
@@ -549,10 +555,11 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
         uint256 x;
         uint256 y;
         (x, y) = _burning(tokens, _totalSupply);
+        require(x > 0);
+        require(y > 0);
         uint256 fee = _gasFeeBurn(x, y, _treasuryFee);
         uint256 _projectFee = y.safeMul(_projectFee).safeDiv(10000);
 
-        require(x > 0);
         require(_balances[from] >= x);
         require(address(this).balance >= y);
         require(y >= fee);
@@ -561,9 +568,9 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
         payable(_project).transfer(_projectFee);
         payable(from).transfer(y.safeSub(fee).safeSub(_projectFee));
 
-        _balances[from] = (_balances[from]).safeSub(x * (10 ** 18));
+        _balances[from] = (_balances[from]).safeSub(x);
         _totalSupply = _totalSupply.safeSub(x);
-        emit Burned(from, x);
+        emit Burned(from, x, y);
     }
 
     function testBurn(uint256 tokens) public view returns (uint256 x, uint256 y, uint256 fee) {
@@ -577,8 +584,8 @@ contract Hotpot is IHotpot, IHotpotERC20, IHotpotMetadata, MintLicensable, Ownab
         return address(this).balance;
     }
 
-    event Mined(address indexed _to, uint256 tokens);
+    event Mined(address indexed _to, uint256 tokens, uint256 binded);
 
-    event Burned(address indexed _from, uint256 tokens);
+    event Burned(address indexed _from, uint256 tokens, uint256 binded);
 
 }
